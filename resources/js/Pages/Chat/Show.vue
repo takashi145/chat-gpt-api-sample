@@ -220,7 +220,7 @@ const deleteChat = id => {
         placeholder="チャット名を修正"
       ></TextInput>
       <InputError :message="errors.name" class="mb-2" />
-      <PrimaryButton>Update</PrimaryButton>
+      <PrimaryButton :disabled="!chat_form.name">Update</PrimaryButton>
     </form>
   </Modal>
 </template>

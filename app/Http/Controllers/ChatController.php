@@ -6,7 +6,6 @@ use App\Http\Requests\StoreChatRequest;
 use App\Http\Requests\UpdateChatRequest;
 use App\Models\Chat;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -15,8 +14,12 @@ use OpenAI\Laravel\Facades\OpenAI;
 
 class ChatController extends Controller
 {
+    /**
+     * チャット画面を表示
+     */
     public function show(string $id = null): Response
     {
+        // ログインユーザーの作成したチャット一覧を取得
         $chat_list = Auth::user()->chats()->select('id', 'name', 'updated_at')->get();
 
         $chat = null;
@@ -30,6 +33,12 @@ class ChatController extends Controller
         ]);
     }
 
+    /**
+     * チャットにメッセージとそれに対する返答を保存
+     * 
+     * 引数にidが指定されていれば、そのidを持つチャットにメッセージと返答を保存。
+     * idがなければ新しくチャットを作成し、そのチャットにメッセージと返答を保存。
+     */
     public function store(StoreChatRequest $request, string $id = null): RedirectResponse
     {
         $messages = [];
@@ -64,6 +73,9 @@ class ChatController extends Controller
         return Redirect::route('chat.show', ['id' => $chat->id]);
     }
 
+    /**
+     * 指定されたチャットの名前を変更
+     */
     public function update(UpdateChatRequest $request, Chat $chat): RedirectResponse
     {
         $chat->name = $request->input('name');
@@ -71,6 +83,9 @@ class ChatController extends Controller
         return Redirect::back();
     }
 
+    /**
+     * 指定されたチャットを削除
+     */
     public function destroy(Chat $chat): RedirectResponse
     {
         $chat->delete();
