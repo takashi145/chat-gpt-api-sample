@@ -15,7 +15,7 @@ class ChatController extends Controller
 {
     public function show(string $id = null): Response
     {
-        $chat_list = Auth::user()->chats()->select('id', 'updated_at')->get();
+        $chat_list = Auth::user()->chats()->select('id', 'name', 'updated_at')->get();
 
         $chat = null;
         if($id) {
@@ -55,10 +55,17 @@ class ChatController extends Controller
             'id' => $id,
             'user_id' => Auth::id(),
         ], [
+            'name' => 'New Chat',
             'context' => $messages
         ]);
 
         return Redirect::route('chat.show', ['id' => $chat->id]);
+    }
+
+    public function update(Request $request, Chat $chat): RedirectResponse
+    {
+        
+        return Redirect::back();
     }
 
     public function destroy(Chat $chat): RedirectResponse
