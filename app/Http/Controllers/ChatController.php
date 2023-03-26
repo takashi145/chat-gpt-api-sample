@@ -64,7 +64,8 @@ class ChatController extends Controller
 
     public function update(Request $request, Chat $chat): RedirectResponse
     {
-        
+        $chat->name = $request->input('name');
+        $chat->save();
         return Redirect::back();
     }
 

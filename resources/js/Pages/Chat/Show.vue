@@ -23,7 +23,7 @@ const form = useForm({
 
 const chat_form = useForm({
   name: ""
-})
+});
 
 const chat_id = ref(null);
 
@@ -33,7 +33,6 @@ const loading = ref(false);
 
 const sendMessage = () => {
   if(!form.prompt) return;
-
   form.post(route('chat.store', {id: props.chat ? props.chat.id : null }), {
     onSuccess: () => form.reset(),
     onStart: () => loading.value = true,
@@ -42,7 +41,12 @@ const sendMessage = () => {
 }
 
 const updateChatName = () => {
-
+  chat_form.put(route('chat.update', {id: chat_id.value}), {
+    onSuccess: () => {
+      chat_form.reset();
+      chat_id.value = null;
+    }
+  })
 }
 
 const deleteChat = id => {
@@ -135,7 +139,7 @@ const deleteChat = id => {
             </Link>
 
             <div class="flex items-center space-x-2 pr-2">
-              <button @click="chat_id = c.id">
+              <button @click="chat_form.name = c.name; chat_id = c.id">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-blue-400 hover:text-blue-500">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
                 </svg>
@@ -204,9 +208,11 @@ const deleteChat = id => {
     </div>  
   </div>
 
-  <Modal :show="chat_id" max-width="md" @close="chat_id = null">
-    <form @click="updateChatName" class="bg-white p-3">
+  <Modal :show="chat_id" max-width="md" @close="chat_form.reset(); chat_id = null">
+    <form @submit.prevent="updateChatName" class="bg-white p-3">
+      <h3 class="text-gray-800 font-bold text-lg mb-1">チャット名を編集</h3>
       <TextInput
+        v-model="chat_form.name"
         class="p-2 mb-2 bg-gray-200 w-full border border-gray-400 focus:border-0 focus:ring-2 focus:outline-none"
         placeholder="チャット名を修正"
       ></TextInput>
