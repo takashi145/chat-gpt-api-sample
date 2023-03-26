@@ -6,6 +6,7 @@ import Sidebar from '@/Components/Sidebar.vue';
 import Modal from '@/Components/Modal.vue';
 import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import InputError from '@/Components/InputError.vue';
 import { marked } from 'marked';
 
 marked.setOptions({
@@ -14,7 +15,8 @@ marked.setOptions({
 
 const props = defineProps({
   chat_list: Array,
-  chat: null | Object
+  chat: null | Object,
+  errors: Object,
 })
 
 const form = useForm({
@@ -204,11 +206,12 @@ const deleteChat = id => {
           </button>
           <div v-else class="ml-3 animate-spin h-6 w-6 border-4 border-blue-500 rounded-full border-t-transparent"></div>
         </div>
+        <InputError :message="errors.prompt" />
       </form>
     </div>  
   </div>
 
-  <Modal :show="chat_id" max-width="md" @close="chat_form.reset(); chat_id = null">
+  <Modal :show="chat_id" max-width="md" @close="chat_form.reset(); chat_id = null; errors = ''">
     <form @submit.prevent="updateChatName" class="bg-white p-3">
       <h3 class="text-gray-800 font-bold text-lg mb-1">チャット名を編集</h3>
       <TextInput
@@ -216,6 +219,7 @@ const deleteChat = id => {
         class="p-2 mb-2 bg-gray-200 w-full border border-gray-400 focus:border-0 focus:ring-2 focus:outline-none"
         placeholder="チャット名を修正"
       ></TextInput>
+      <InputError :message="errors.name" class="mb-2" />
       <PrimaryButton>Update</PrimaryButton>
     </form>
   </Modal>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreChatRequest;
+use App\Http\Requests\UpdateChatRequest;
 use App\Models\Chat;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,7 +30,7 @@ class ChatController extends Controller
         ]);
     }
 
-    public function store(Request $request, string $id = null): RedirectResponse
+    public function store(StoreChatRequest $request, string $id = null): RedirectResponse
     {
         $messages = [];
         if($id) {
@@ -62,7 +64,7 @@ class ChatController extends Controller
         return Redirect::route('chat.show', ['id' => $chat->id]);
     }
 
-    public function update(Request $request, Chat $chat): RedirectResponse
+    public function update(UpdateChatRequest $request, Chat $chat): RedirectResponse
     {
         $chat->name = $request->input('name');
         $chat->save();
