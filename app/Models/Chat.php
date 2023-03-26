@@ -15,6 +15,6 @@ class Chat extends Model
     ];
 
     protected $casts = [
-        'context' => 'array'
+        'context' => 'array',
     ];
 }

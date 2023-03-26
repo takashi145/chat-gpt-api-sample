@@ -38,7 +38,7 @@ class ChatController extends Controller
         
         $messages[] = [
             'role' => 'user', 
-            'content' => $request->input('prompt')
+            'content' => $request->input('prompt'),
         ];
 
         $response = OpenAI::chat()->create([
