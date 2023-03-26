@@ -1,14 +1,13 @@
 <script setup>
 import { watch } from "vue"
 
-
 const props = defineProps({
   show: Boolean
 })
 
 const emit = defineEmits(['close'])
 
-watch(props.show, () => {
+watch(() => props.show, () => {
   if (props.show) {
     document.body.style.overflow = 'hidden';
   } else {
