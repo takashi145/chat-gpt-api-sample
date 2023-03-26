@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/chat/{id?}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{id?}', [ChatController::class, 'store'])->name('chat.store');
+    Route::delete('/chat/{chat}', [ChatController::class, 'destroy'])->name('chat.delete');
 });
 
 require __DIR__.'/auth.php';

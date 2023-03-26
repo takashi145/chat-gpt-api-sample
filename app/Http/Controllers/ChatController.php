@@ -60,4 +60,10 @@ class ChatController extends Controller
 
         return Redirect::route('chat.show', ['id' => $chat->id]);
     }
+
+    public function destroy(Chat $chat): RedirectResponse
+    {
+        $chat->delete();
+        return Redirect::route('chat.show');
+    }
 }
