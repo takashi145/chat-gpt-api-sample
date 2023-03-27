@@ -1,15 +1,16 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { marked } from 'marked';
 import Sidebar from '@/Components/Sidebar.vue';
 import Modal from '@/Components/Modal.vue';
 import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputError from '@/Components/InputError.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import { marked } from 'marked';
 
+
+// マークダウンで改行を適用する
 marked.setOptions({
   breaks: true,
 })
@@ -57,10 +58,14 @@ const deleteChat = id => {
     onBefore: () => confirm('本当に削除してもよろしいですか？')
   })
 }
+
+const copy = message => {
+  navigator.clipboard.writeText(message)
+}
 </script>
 
 <template>
-  <Head title="Chat" />
+  <Head title="ChatShow" />
 
   <!-- open sidebar -->
   <button type="button" @click="open_sidebar = true" class="fixed top-0 z-20 bg-slate-400 inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200">
@@ -72,10 +77,9 @@ const deleteChat = id => {
   <!-- sidebar -->
   <Sidebar :show="open_sidebar" @close="open_sidebar = false">
     <div class="h-full px-3 py-1 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-      <!-- <div class="flex items-center m-1 p-1 text-lg">
-        <ApplicationLogo class="w-6 h-6 mr-3" />
-        Logo
-      </div> -->
+      <div class="inline-block p-1 text-lg bg-slate-500 rounded-xl mt-1">
+        <ApplicationLogo class="w-8 h-8" />
+      </div>
       <button @click="open_sidebar = false" class="fixed top-0 right-0 m-2">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -83,7 +87,7 @@ const deleteChat = id => {
       </button> 
       
 
-      <ul class="mt-8 space-y-3">
+      <ul class="mt-3 space-y-3">
         <li class="text-gray-400 rounded p-1 bg-gray-800 hover:bg-gray-600 hover:text-gray-200">
           <Link 
             :href="route('profile.edit')"
@@ -167,6 +171,7 @@ const deleteChat = id => {
   <!-- chat -->
   <div class="lg:pl-72">
     <div class="max-w-3xl mx-auto bg-slate-600 min-h-screen h-full">
+      <!--header-->
       <div class="sticky top-0 z-10 w-full bg-slate-800 py-3.5 border-b border-gray-400">
         <h2 class="text-lg md:text-xl mb-1">
           <div v-if="chat" class="text-center">{{ chat.name }}</div>
@@ -174,7 +179,7 @@ const deleteChat = id => {
         </h2>
       </div>
 
-      <!--messages -->
+      <!--message -->
       <div v-if="chat" class="mx-3 pb-20 pt-6">
         <div 
           v-for="(message, index) in chat.context" 
@@ -192,9 +197,16 @@ const deleteChat = id => {
             :class="[message.role === 'user' ? 'chat-bubble-info' : '']" 
             v-html="marked(message.content)"
           ></div>
+          <div class="chat-footer mt-1">
+            <button @click="copy(message.content)" class="flex items-center hover:text-blue-500">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+              </svg>
+              コピー
+            </button>
+          </div>
         </div>
       </div>
-
       <div v-else class="text-center pt-40">
         <h3 class="flex justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-24 h-24 text-gray-400">
@@ -217,6 +229,7 @@ const deleteChat = id => {
     </div>  
   </div>
 
+  <!-- update chat name -->
   <Modal :show="chat_id" max-width="md" @close="chat_form.reset(); chat_id = null; errors = ''">
     <form @submit.prevent="updateChatName" class="bg-white p-3">
       <h3 class="text-gray-800 font-bold text-lg mb-1">チャット名を編集</h3>
