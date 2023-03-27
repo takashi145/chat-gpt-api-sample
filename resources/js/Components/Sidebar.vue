@@ -19,7 +19,7 @@ watch(() => props.show, () => {
   <div 
     v-show="show" 
     @click="emit('close')"
-    class="fixed inset-0 bg-black/50 z-10"
+    class="fixed inset-0 bg-black/50 z-20"
   ></div>
 
   <aside 

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateChatRequest;
 use App\Models\Chat;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,13 +20,17 @@ class ChatController extends Controller
      */
     public function show(string $id = null): Response
     {
-        // ログインユーザーの作成したチャット一覧を取得
-        $chat_list = Auth::user()->chats()->select('id', 'name', 'updated_at')->get();
-
         $chat = null;
         if($id) {
             $chat = Chat::findOrFail($id);
+            // チャットの作成者でなければ404ページを表示
+            if(! Gate::allows('show-chat', $chat)) {
+                abort(404);
+            }
         }
+
+        // ログインユーザーの作成したチャット一覧を取得
+        $chat_list = Auth::user()->chats()->select('id', 'name', 'updated_at')->get();
 
         return Inertia::render('Chat/Show', [
             'chat_list' => $chat_list,
@@ -44,6 +49,9 @@ class ChatController extends Controller
         $messages = [];
         if($id) {
             $chat = Chat::findOrFail($id);
+            if(! Gate::allows('show-chat', $chat)) {
+                abort(404);
+            }
             $messages = $chat->context;
         }
         

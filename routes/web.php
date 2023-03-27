@@ -33,8 +33,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/chat/{id?}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{id?}', [ChatController::class, 'store'])->name('chat.store');
-    Route::put('/chat/{chat}', [ChatController::class, 'update'])->name('chat.update');
-    Route::delete('/chat/{chat}', [ChatController::class, 'destroy'])->name('chat.delete');
+    Route::put('/chat/{chat}', [ChatController::class, 'update'])->middleware('can:show-chat,chat')->name('chat.update');
+    Route::delete('/chat/{chat}', [ChatController::class, 'destroy'])->middleware('can:show-chat,chat')->name('chat.delete');
 });
 
 require __DIR__.'/auth.php';

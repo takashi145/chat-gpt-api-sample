@@ -7,6 +7,7 @@ import Modal from '@/Components/Modal.vue';
 import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputError from '@/Components/InputError.vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { marked } from 'marked';
 
 marked.setOptions({
@@ -62,7 +63,7 @@ const deleteChat = id => {
   <Head title="Chat" />
 
   <!-- open sidebar -->
-  <button type="button" @click="open_sidebar = true" class="fixed top-0 z-10 bg-slate-400 inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200">
+  <button type="button" @click="open_sidebar = true" class="fixed top-0 z-20 bg-slate-400 inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200">
     <svg class="w-6 h-6 text-gray-600" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
     </svg>
@@ -71,11 +72,16 @@ const deleteChat = id => {
   <!-- sidebar -->
   <Sidebar :show="open_sidebar" @close="open_sidebar = false">
     <div class="h-full px-3 py-1 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-      <button @click="open_sidebar = false" class="fixed top-0 right-0 m-1 lg:hidden">
+      <!-- <div class="flex items-center m-1 p-1 text-lg">
+        <ApplicationLogo class="w-6 h-6 mr-3" />
+        Logo
+      </div> -->
+      <button @click="open_sidebar = false" class="fixed top-0 right-0 m-2">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
-      </button>
+      </button> 
+      
 
       <ul class="mt-8 space-y-3">
         <li class="text-gray-400 rounded p-1 bg-gray-800 hover:bg-gray-600 hover:text-gray-200">
@@ -161,7 +167,7 @@ const deleteChat = id => {
   <!-- chat -->
   <div class="lg:pl-72">
     <div class="max-w-3xl mx-auto bg-slate-600 min-h-screen h-full">
-      <div class="w-full bg-slate-800 py-3.5 border-b border-gray-400">
+      <div class="sticky top-0 z-10 w-full bg-slate-800 py-3.5 border-b border-gray-400">
         <h2 class="text-lg md:text-xl mb-1">
           <div v-if="chat" class="text-center">{{ chat.name }}</div>
           <div v-else class="text-center">New Chat</div>
