@@ -1,5 +1,10 @@
 # laravel chat gpt
 
+chatGPTのAPIを使ってみた
+
+<img width="911" alt="chatgpt" src="https://user-images.githubusercontent.com/84027833/234751836-d127d8c4-2846-4f2e-9db7-d8b1ab9777ab.PNG">
+
+
 ```
 git clone git@github.com:takashi145/laravel-mytemplate.git
 ```
